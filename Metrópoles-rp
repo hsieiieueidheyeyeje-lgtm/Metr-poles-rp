@@ -525,4 +525,20 @@ local function criarPainelRevistar(jogador)
             pcall(function() revistarGui:Destroy() end)
             revistarGui = nil
         end
-    e
+    e    btn.MouseButton1Click:Connect(function()
+        pcall(function()
+            if setclipboard then setclipboard(comando)
+            elseif toclipboard then toclipboard(comando) end
+        end)
+        enviarRevistar(usuario)
+        btn.Text = "✅ Copiado e enviado!"
+        btn.BackgroundColor3 = C.Verde
+        btn.TextColor3 = Color3.new(1,1,1)
+        task.wait(1.2)
+        if revistarGui then
+            pcall(function() revistarGui:Destroy() end)
+            revistarGui = nil
+        end
+    end) -- fecha a função do clique
+    revistarGui = frame -- ou algo assim, para guardar a referência
+end -- fecha a função criarPainelRevistar
