@@ -1,0 +1,528 @@
+--[[ PRO HUB - Noclip Adicionado ]]
+task.wait(0.5)
+
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local LP = Players.LocalPlayer
+local PG = LP:WaitForChild("PlayerGui")
+local Camera = workspace.CurrentCamera
+
+local CFG = { ESP=false, Box=true, Line=true, Nome=true, Dist=true, Chams=true, Hitbox=false, HitboxTam=15, Noclip=false }
+local C = {
+    Fundo=Color3.fromRGB(20,20,28), Card=Color3.fromRGB(32,32,44), Botao=Color3.fromRGB(45,45,58),
+    Accent=Color3.fromRGB(140,80,255), Texto=Color3.fromRGB(240,240,250), Sub=Color3.fromRGB(160,160,180),
+    Verde=Color3.fromRGB(50,200,100), Vermelho=Color3.fromRGB(220,60,60),
+}
+
+local SG = Instance.new("ScreenGui")
+SG.Name = "ProHub"
+SG.ResetOnSpawn = false
+SG.IgnoreGuiInset = true
+SG.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+SG.Parent = PG
+
+-- ===== BOTÃO FLUTUANTE REDONDO =====
+local FloatBtn = Instance.new("TextButton")
+FloatBtn.Size = UDim2.new(0, 55, 0, 55)
+FloatBtn.Position = UDim2.new(0, 20, 0.5, -27)
+FloatBtn.BackgroundColor3 = C.Accent
+FloatBtn.Text = "⚡"
+FloatBtn.TextColor3 = Color3.new(1,1,1)
+FloatBtn.TextSize = 26
+FloatBtn.Font = Enum.Font.GothamBold
+FloatBtn.BorderSizePixel = 0
+FloatBtn.Active = true
+FloatBtn.AutoButtonColor = false
+FloatBtn.Parent = SG
+Instance.new("UICorner", FloatBtn).CornerRadius = UDim.new(1, 0)
+local BStk = Instance.new("UIStroke", FloatBtn)
+BStk.Color = Color3.new(1,1,1)
+BStk.Thickness = 2
+BStk.Transparency = 0.4
+
+-- ===== PAINEL =====
+local Main = Instance.new("Frame")
+Main.Size = UDim2.new(0, 420, 0, 280)
+Main.Position = UDim2.new(0.5, -210, 0.5, -140)
+Main.BackgroundColor3 = C.Fundo
+Main.BorderSizePixel = 0
+Main.Active = true
+Main.ClipsDescendants = true
+Main.Visible = false
+Main.Parent = SG
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 8)
+local MS = Instance.new("UIStroke", Main)
+MS.Color = C.Accent
+MS.Thickness = 1.5
+
+local TopBar = Instance.new("Frame", Main)
+TopBar.Size = UDim2.new(1, 0, 0, 32)
+TopBar.BackgroundColor3 = C.Card
+TopBar.BorderSizePixel = 0
+Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 8)
+local TBFix = Instance.new("Frame", TopBar)
+TBFix.Size = UDim2.new(1, 0, 0, 8)
+TBFix.Position = UDim2.new(0, 0, 1, -8)
+TBFix.BackgroundColor3 = C.Card
+TBFix.BorderSizePixel = 0
+
+local Title = Instance.new("TextLabel", TopBar)
+Title.Size = UDim2.new(1, -70, 1, 0)
+Title.Position = UDim2.new(0, 10, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "PRO HUB"
+Title.TextColor3 = C.Texto
+Title.TextSize = 12
+Title.Font = Enum.Font.GothamBold
+Title.TextXAlignment = Enum.TextXAlignment.Left
+
+local BtnMin = Instance.new("TextButton", TopBar)
+BtnMin.Size = UDim2.new(0, 22, 0, 22)
+BtnMin.Position = UDim2.new(1, -52, 0, 5)
+BtnMin.BackgroundColor3 = C.Botao
+BtnMin.Text = "—"
+BtnMin.TextColor3 = C.Texto
+BtnMin.TextSize = 13
+BtnMin.Font = Enum.Font.GothamBold
+BtnMin.BorderSizePixel = 0
+Instance.new("UICorner", BtnMin).CornerRadius = UDim.new(0, 4)
+
+local BtnClose = Instance.new("TextButton", TopBar)
+BtnClose.Size = UDim2.new(0, 22, 0, 22)
+BtnClose.Position = UDim2.new(1, -26, 0, 5)
+BtnClose.BackgroundColor3 = C.Vermelho
+BtnClose.Text = "X"
+BtnClose.TextColor3 = Color3.new(1,1,1)
+BtnClose.TextSize = 11
+BtnClose.Font = Enum.Font.GothamBold
+BtnClose.BorderSizePixel = 0
+Instance.new("UICorner", BtnClose).CornerRadius = UDim.new(0, 4)
+
+local Sidebar = Instance.new("Frame", Main)
+Sidebar.Size = UDim2.new(0, 90, 1, -32)
+Sidebar.Position = UDim2.new(0, 0, 0, 32)
+Sidebar.BackgroundColor3 = C.Card
+Sidebar.BorderSizePixel = 0
+local SBList = Instance.new("UIListLayout", Sidebar)
+SBList.Padding = UDim.new(0, 3)
+SBList.SortOrder = Enum.SortOrder.LayoutOrder
+local SBPad = Instance.new("UIPadding", Sidebar)
+SBPad.PaddingTop = UDim.new(0, 6)
+SBPad.PaddingLeft = UDim.new(0, 6)
+SBPad.PaddingRight = UDim.new(0, 6)
+
+local Content = Instance.new("Frame", Main)
+Content.Size = UDim2.new(1, -90, 1, -32)
+Content.Position = UDim2.new(0, 90, 0, 32)
+Content.BackgroundColor3 = C.Fundo
+Content.BorderSizePixel = 0
+local CPad = Instance.new("UIPadding", Content)
+CPad.PaddingTop = UDim.new(0, 8)
+CPad.PaddingLeft = UDim.new(0, 8)
+CPad.PaddingRight = UDim.new(0, 8)
+
+-- ===== ABAS =====
+local Abas, AbaAtual = {}, nil
+
+local function criarAba(nome, icone)
+    local btn = Instance.new("TextButton", Sidebar)
+    btn.Size = UDim2.new(1, 0, 0, 26)
+    btn.BackgroundColor3 = C.Botao
+    btn.Text = icone.." "..nome
+    btn.TextColor3 = C.Texto
+    btn.TextSize = 9
+    btn.Font = Enum.Font.GothamBold
+    btn.BorderSizePixel = 0
+    btn.AutoButtonColor = false
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+    
+    local scroll = Instance.new("ScrollingFrame", Content)
+    scroll.Size = UDim2.new(1, 0, 1, 0)
+    scroll.BackgroundTransparency = 1
+    scroll.ScrollBarThickness = 3
+    scroll.ScrollBarImageColor3 = C.Accent
+    scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+    scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    scroll.Visible = false
+    
+    local list = Instance.new("UIListLayout", scroll)
+    list.Padding = UDim.new(0, 4)
+    
+    local aba = {botao=btn, scroll=scroll}
+    Abas[nome] = aba
+    
+    btn.MouseButton1Click:Connect(function()
+        if AbaAtual then
+            AbaAtual.scroll.Visible = false
+            AbaAtual.botao.BackgroundColor3 = C.Botao
+        end
+        scroll.Visible = true
+        btn.BackgroundColor3 = C.Accent
+        AbaAtual = aba
+    end)
+    return aba
+end
+
+-- ===== COMPONENTES =====
+local function criarToggle(aba, nome, cb)
+    local card = Instance.new("Frame", aba.scroll)
+    card.Size = UDim2.new(1, -6, 0, 30)
+    card.BackgroundColor3 = C.Card
+    card.BorderSizePixel = 0
+    Instance.new("UICorner", card).CornerRadius = UDim.new(0, 6)
+    local lbl = Instance.new("TextLabel", card)
+    lbl.Size = UDim2.new(1, -55, 1, 0)
+    lbl.Position = UDim2.new(0, 10, 0, 0)
+    lbl.BackgroundTransparency = 1
+    lbl.Text = nome
+    lbl.TextColor3 = C.Texto
+    lbl.TextSize = 10
+    lbl.Font = Enum.Font.GothamBold
+    lbl.TextXAlignment = Enum.TextXAlignment.Left
+    local swBg = Instance.new("Frame", card)
+    swBg.Size = UDim2.new(0, 34, 0, 18)
+    swBg.Position = UDim2.new(1, -42, 0.5, -9)
+    swBg.BackgroundColor3 = C.Botao
+    swBg.BorderSizePixel = 0
+    Instance.new("UICorner", swBg).CornerRadius = UDim.new(1, 0)
+    local swDot = Instance.new("Frame", swBg)
+    swDot.Size = UDim2.new(0, 12, 0, 12)
+    swDot.Position = UDim2.new(0, 3, 0.5, -6)
+    swDot.BackgroundColor3 = C.Sub
+    swDot.BorderSizePixel = 0
+    Instance.new("UICorner", swDot).CornerRadius = UDim.new(1, 0)
+    local btn = Instance.new("TextButton", card)
+    btn.Size = UDim2.new(1, 0, 1, 0)
+    btn.BackgroundTransparency = 1
+    btn.Text = ""
+    local est = false
+    btn.MouseButton1Click:Connect(function()
+        est = not est
+        if est then
+            swBg.BackgroundColor3 = C.Verde
+            swDot.Position = UDim2.new(0, 19, 0.5, -6)
+            swDot.BackgroundColor3 = Color3.new(1,1,1)
+        else
+            swBg.BackgroundColor3 = C.Botao
+            swDot.Position = UDim2.new(0, 3, 0.5, -6)
+            swDot.BackgroundColor3 = C.Sub
+        end
+        if cb then pcall(cb, est) end
+    end)
+end
+
+local function criarBotao(aba, nome, cb, cor)
+    local btn = Instance.new("TextButton", aba.scroll)
+    btn.Size = UDim2.new(1, -6, 0, 28)
+    btn.BackgroundColor3 = cor or C.Card
+    btn.Text = nome
+    btn.TextColor3 = C.Texto
+    btn.TextSize = 10
+    btn.Font = Enum.Font.GothamBold
+    btn.BorderSizePixel = 0
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+    btn.MouseButton1Click:Connect(function() if cb then pcall(cb) end end)
+end
+
+local function criarSlider(aba, nome, min, max, ini, cb)
+    local card = Instance.new("Frame", aba.scroll)
+    card.Size = UDim2.new(1, -6, 0, 38)
+    card.BackgroundColor3 = C.Card
+    card.BorderSizePixel = 0
+    Instance.new("UICorner", card).CornerRadius = UDim.new(0, 6)
+    local lbl = Instance.new("TextLabel", card)
+    lbl.Size = UDim2.new(1, -16, 0, 16)
+    lbl.Position = UDim2.new(0, 10, 0, 4)
+    lbl.BackgroundTransparency = 1
+    lbl.Text = nome..": "..tostring(ini)
+    lbl.TextColor3 = C.Texto
+    lbl.TextSize = 10
+    lbl.Font = Enum.Font.GothamBold
+    lbl.TextXAlignment = Enum.TextXAlignment.Left
+    local barBg = Instance.new("Frame", card)
+    barBg.Size = UDim2.new(1, -20, 0, 5)
+    barBg.Position = UDim2.new(0, 10, 0, 26)
+    barBg.BackgroundColor3 = C.Botao
+    barBg.BorderSizePixel = 0
+    Instance.new("UICorner", barBg).CornerRadius = UDim.new(1, 0)
+    local fill = Instance.new("Frame", barBg)
+    fill.Size = UDim2.new((ini-min)/(max-min), 0, 1, 0)
+    fill.BackgroundColor3 = C.Accent
+    fill.BorderSizePixel = 0
+    Instance.new("UICorner", fill).CornerRadius = UDim.new(1, 0)
+    local btn = Instance.new("TextButton", card)
+    btn.Size = UDim2.new(1, 0, 1, 0)
+    btn.BackgroundTransparency = 1
+    btn.Text = ""
+    local arr = false
+    local function setV(x)
+        local rel = math.clamp((x - barBg.AbsolutePosition.X) / barBg.AbsoluteSize.X, 0, 1)
+        local val = math.floor(min + (max-min)*rel)
+        fill.Size = UDim2.new(rel, 0, 1, 0)
+        lbl.Text = nome..": "..tostring(val)
+        if cb then pcall(cb, val) end
+    end
+    btn.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            arr = true; setV(input.Position.X)
+        end
+    end)
+    UIS.InputChanged:Connect(function(input)
+        if arr and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            setV(input.Position.X)
+        end
+    end)
+    UIS.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then arr = false end
+    end)
+end
+
+local function getHRP() local c = LP.Character return c and c:FindFirstChild("HumanoidRootPart") end
+
+-- ===== ESP =====
+local ESPObj = {}
+local function limparESP()
+    for _, o in pairs(ESPObj) do
+        for _, v in pairs(o) do
+            if v then
+                pcall(function() if v.Remove then v:Remove() end end)
+                pcall(function() if v.Destroy then v:Destroy() end end)
+            end
+        end
+    end
+    ESPObj = {}
+end
+
+local function updateESP()
+    if not CFG.ESP then
+        if next(ESPObj) then limparESP() end
+        return
+    end
+    local meuHRP = getHRP()
+    local minhaPos = meuHRP and meuHRP.Position or Vector3.zero
+    local validos = {}
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p ~= LP and p.Character then
+            local hrp = p.Character:FindFirstChild("HumanoidRootPart")
+            local hum = p.Character:FindFirstChildOfClass("Humanoid")
+            if hrp and hum and hum.Health > 0 then
+                local dist = (hrp.Position - minhaPos).Magnitude
+                if dist <= 1500 then
+                    validos[p] = true
+                    local cor = Color3.fromRGB(255,60,60)
+                    if not ESPObj[p] then
+                        local o = {}
+                        if CFG.Box then o.Box = Drawing.new("Square") o.Box.Thickness=1 o.Box.Filled=false o.Box.Visible=false o.Box.ZIndex=2 end
+                        if CFG.Line then o.Line = Drawing.new("Line") o.Line.Thickness=1.5 o.Line.Visible=false o.Line.ZIndex=2 end
+                        if CFG.Nome then o.Nome = Drawing.new("Text") o.Nome.Size=13 o.Nome.Center=true o.Nome.Outline=true o.Nome.OutlineColor=Color3.new(0,0,0) o.Nome.Visible=false o.Nome.ZIndex=3 end
+                        if CFG.Dist then o.Dist = Drawing.new("Text") o.Dist.Size=11 o.Dist.Center=true o.Dist.Outline=true o.Dist.OutlineColor=Color3.new(0,0,0) o.Dist.Visible=false o.Dist.ZIndex=3 end
+                        if CFG.Chams then
+                            o.HL = Instance.new("Highlight")
+                            o.HL.OutlineColor = Color3.new(1,1,1)
+                            o.HL.FillTransparency = 0.5
+                            o.HL.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                            o.HL.Enabled = false
+                            o.HL.Parent = p.Character
+                        end
+                        ESPObj[p] = o
+                    end
+                    local o = ESPObj[p]
+                    if o.HL then
+                        if o.HL.Parent ~= p.Character then o.HL.Parent = p.Character end
+                        o.HL.FillColor = cor
+                        o.HL.Enabled = true
+                    end
+                    local topo2d, topoOn = Camera:WorldToViewportPoint(hrp.Position + Vector3.new(0,3,0))
+                    local base2d, baseOn = Camera:WorldToViewportPoint(hrp.Position - Vector3.new(0,3,0))
+                    if topoOn and baseOn and topo2d.Z > 0 and base2d.Z > 0 then
+                        if o.Box then
+                            local h = math.abs(base2d.Y - topo2d.Y)
+                            local w = h * 0.6
+                            o.Box.Size = Vector2.new(w, h)
+                            o.Box.Position = Vector2.new(topo2d.X - w/2, topo2d.Y)
+                            o.Box.Color = cor
+                            o.Box.Visible = true
+                        end
+                        if o.Line then
+                            local pe2d, peOn = Camera:WorldToViewportPoint(hrp.Position - Vector3.new(0,2.5,0))
+                            local ch2d, chOn = Camera:WorldToViewportPoint(hrp.Position - Vector3.new(0,8,0))
+                            if peOn and chOn then
+                                o.Line.From = Vector2.new(pe2d.X, pe2d.Y)
+                                o.Line.To = Vector2.new(ch2d.X, ch2d.Y)
+                                o.Line.Color = cor
+                                o.Line.Visible = true
+                            else o.Line.Visible = false end
+                        end
+                        if o.Nome then
+                            o.Nome.Text = p.Name
+                            o.Nome.Position = Vector2.new(topo2d.X, topo2d.Y)
+                            o.Nome.Color = cor
+                            o.Nome.Visible = true
+                        end
+                        if o.Dist then
+                            o.Dist.Text = "["..math.floor(dist).."m]"
+                            o.Dist.Position = Vector2.new(topo2d.X, topo2d.Y + 14)
+                            o.Dist.Color = cor
+                            o.Dist.Visible = true
+                        end
+                    else
+                        if o.Box then o.Box.Visible = false end
+                        if o.Line then o.Line.Visible = false end
+                        if o.Nome then o.Nome.Visible = false end
+                        if o.Dist then o.Dist.Visible = false end
+                    end
+                end
+            end
+        end
+    end
+    for p, o in pairs(ESPObj) do
+        if not validos[p] then
+            for _, v in pairs(o) do
+                if v then
+                    pcall(function() if v.Remove then v:Remove() end end)
+                    pcall(function() if v.Destroy then v:Destroy() end end)
+                end
+            end
+            ESPObj[p] = nil
+        end
+    end
+end
+
+-- ===== HITBOX =====
+local hitboxOrig = {}
+local function updateHitbox()
+    if not CFG.Hitbox then
+        for hrp, t in pairs(hitboxOrig) do
+            if hrp and hrp.Parent then
+                pcall(function()
+                    hrp.Size = t.size hrp.Transparency = t.trans
+                    hrp.CanCollide = t.collide hrp.Massless = t.massless
+                end)
+            end
+        end
+        hitboxOrig = {}
+        return
+    end
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p ~= LP and p.Character then
+            local hrp = p.Character:FindFirstChild("HumanoidRootPart")
+            if hrp then
+                if not hitboxOrig[hrp] then
+                    hitboxOrig[hrp] = {size=hrp.Size, trans=hrp.Transparency, collide=hrp.CanCollide, massless=hrp.Massless}
+                end
+                local nt = Vector3.new(CFG.HitboxTam, CFG.HitboxTam, CFG.HitboxTam)
+                if hrp.Size ~= nt then hrp.Size = nt end
+                if hrp.Transparency ~= 1 then hrp.Transparency = 1 end
+                if hrp.CanCollide then hrp.CanCollide = false end
+                if not hrp.Massless then hrp.Massless = true end
+            end
+        end
+    end
+end
+
+-- ===== NOCLIP (NOVO) =====
+local function updateNoclip()
+    if not CFG.Noclip then return end
+    local char = LP.Character
+    if not char then return end
+    for _, pt in ipairs(char:GetDescendants()) do
+        if pt:IsA("BasePart") and pt.CanCollide then
+            pt.CanCollide = false
+        end
+    end
+end
+
+-- ===== AIMBOT MOBILE =====
+local function carregarAimbotMobile()
+    pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/DanielHubll/DanielHubll/refs/heads/main/Aimbot%20Mobile"))()
+    end)
+end
+
+-- ===== REVISTAR =====
+local revistarGui = nil
+
+local function getTargetPlayer()
+    local lc = LP.Character
+    if not lc then return nil end
+    local lhrp = lc:FindFirstChild("HumanoidRootPart")
+    if not lhrp then return nil end
+    local nd, np = math.huge, nil
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LP and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local d = (player.Character.HumanoidRootPart.Position - lhrp.Position).Magnitude
+            if d < nd then nd = d np = player end
+        end
+    end
+    return np
+end
+
+local function enviarRevistar(u)
+    pcall(function()
+        local cs = game:GetService("ReplicatedStorage"):FindFirstChild("DefaultChatSystemChatEvents")
+        if cs then
+            local sm = cs:FindFirstChild("SayMessageRequest")
+            if sm then sm:FireServer("/revistar "..u, "All") end
+        end
+    end)
+end
+
+local function criarPainelRevistar(jogador)
+    if revistarGui then
+        pcall(function() revistarGui:Destroy() end)
+        revistarGui = nil
+    end
+    if not jogador then return end
+    local usuario = jogador.Name
+    local comando = "/revistar "..usuario
+    
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 220, 0, 90)
+    frame.Position = UDim2.new(0.5, -110, 0.5, -45)
+    frame.BackgroundColor3 = C.Fundo
+    frame.BorderSizePixel = 0
+    frame.Active = true
+    frame.Draggable = true
+    frame.Parent = SG
+    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
+    local fs = Instance.new("UIStroke", frame)
+    fs.Color = C.Verde
+    fs.Thickness = 2
+    
+    local tit = Instance.new("TextLabel", frame)
+    tit.Size = UDim2.new(1, -10, 0, 22)
+    tit.Position = UDim2.new(0, 5, 0, 4)
+    tit.BackgroundTransparency = 1
+    tit.Text = "Revistar - "..usuario
+    tit.TextColor3 = C.Verde
+    tit.TextSize = 11
+    tit.Font = Enum.Font.GothamBold
+    
+    local btn = Instance.new("TextButton", frame)
+    btn.Size = UDim2.new(1, -16, 0, 50)
+    btn.Position = UDim2.new(0, 8, 0, 30)
+    btn.BackgroundColor3 = C.Card
+    btn.Text = "📋 "..comando.."\n(clique pra copiar e enviar)"
+    btn.TextColor3 = C.Texto
+    btn.TextSize = 11
+    btn.Font = Enum.Font.GothamBold
+    btn.BorderSizePixel = 0
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+    
+    btn.MouseButton1Click:Connect(function()
+        pcall(function()
+            if setclipboard then setclipboard(comando)
+            elseif toclipboard then toclipboard(comando) end
+        end)
+        enviarRevistar(usuario)
+        btn.Text = "✅ Copiado e enviado!"
+        btn.BackgroundColor3 = C.Verde
+        btn.TextColor3 = Color3.new(1,1,1)
+        task.wait(1.2)
+        if revistarGui then
+            pcall(function() revistarGui:Destroy() end)
+            revistarGui = nil
+        end
+    e
