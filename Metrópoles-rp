@@ -1,4 +1,4 @@
---[[ PRO HUB - Noclip Adicionado ]]
+-- PRO HUB - Noclip versao clipboard safe
 task.wait(0.5)
 
 local Players = game:GetService("Players")
@@ -23,14 +23,14 @@ SG.IgnoreGuiInset = true
 SG.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 SG.Parent = PG
 
--- ===== BOTÃO FLUTUANTE REDONDO =====
+-- BOTAO FLUTUANTE
 local FloatBtn = Instance.new("TextButton")
 FloatBtn.Size = UDim2.new(0, 55, 0, 55)
 FloatBtn.Position = UDim2.new(0, 20, 0.5, -27)
 FloatBtn.BackgroundColor3 = C.Accent
-FloatBtn.Text = "⚡"
+FloatBtn.Text = "HUB"
 FloatBtn.TextColor3 = Color3.new(1,1,1)
-FloatBtn.TextSize = 26
+FloatBtn.TextSize = 14
 FloatBtn.Font = Enum.Font.GothamBold
 FloatBtn.BorderSizePixel = 0
 FloatBtn.Active = true
@@ -42,7 +42,7 @@ BStk.Color = Color3.new(1,1,1)
 BStk.Thickness = 2
 BStk.Transparency = 0.4
 
--- ===== PAINEL =====
+-- PAINEL
 local Main = Instance.new("Frame")
 Main.Size = UDim2.new(0, 420, 0, 280)
 Main.Position = UDim2.new(0.5, -210, 0.5, -140)
@@ -82,9 +82,9 @@ local BtnMin = Instance.new("TextButton", TopBar)
 BtnMin.Size = UDim2.new(0, 22, 0, 22)
 BtnMin.Position = UDim2.new(1, -52, 0, 5)
 BtnMin.BackgroundColor3 = C.Botao
-BtnMin.Text = "—"
+BtnMin.Text = "-"
 BtnMin.TextColor3 = C.Texto
-BtnMin.TextSize = 13
+BtnMin.TextSize = 14
 BtnMin.Font = Enum.Font.GothamBold
 BtnMin.BorderSizePixel = 0
 Instance.new("UICorner", BtnMin).CornerRadius = UDim.new(0, 4)
@@ -95,7 +95,7 @@ BtnClose.Position = UDim2.new(1, -26, 0, 5)
 BtnClose.BackgroundColor3 = C.Vermelho
 BtnClose.Text = "X"
 BtnClose.TextColor3 = Color3.new(1,1,1)
-BtnClose.TextSize = 11
+BtnClose.TextSize = 12
 BtnClose.Font = Enum.Font.GothamBold
 BtnClose.BorderSizePixel = 0
 Instance.new("UICorner", BtnClose).CornerRadius = UDim.new(0, 4)
@@ -123,7 +123,6 @@ CPad.PaddingTop = UDim.new(0, 8)
 CPad.PaddingLeft = UDim.new(0, 8)
 CPad.PaddingRight = UDim.new(0, 8)
 
--- ===== ABAS =====
 local Abas, AbaAtual = {}, nil
 
 local function criarAba(nome, icone)
@@ -165,7 +164,6 @@ local function criarAba(nome, icone)
     return aba
 end
 
--- ===== COMPONENTES =====
 local function criarToggle(aba, nome, cb)
     local card = Instance.new("Frame", aba.scroll)
     card.Size = UDim2.new(1, -6, 0, 30)
@@ -281,7 +279,7 @@ end
 
 local function getHRP() local c = LP.Character return c and c:FindFirstChild("HumanoidRootPart") end
 
--- ===== ESP =====
+-- ESP
 local ESPObj = {}
 local function limparESP()
     for _, o in pairs(ESPObj) do
@@ -390,7 +388,7 @@ local function updateESP()
     end
 end
 
--- ===== HITBOX =====
+-- HITBOX
 local hitboxOrig = {}
 local function updateHitbox()
     if not CFG.Hitbox then
@@ -422,7 +420,7 @@ local function updateHitbox()
     end
 end
 
--- ===== NOCLIP (NOVO) =====
+-- NOCLIP
 local function updateNoclip()
     if not CFG.Noclip then return end
     local char = LP.Character
@@ -434,14 +432,14 @@ local function updateNoclip()
     end
 end
 
--- ===== AIMBOT MOBILE =====
+-- AIMBOT MOBILE
 local function carregarAimbotMobile()
     pcall(function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/DanielHubll/DanielHubll/refs/heads/main/Aimbot%20Mobile"))()
     end)
 end
 
--- ===== REVISTAR =====
+-- REVISTAR
 local revistarGui = nil
 
 local function getTargetPlayer()
@@ -504,7 +502,7 @@ local function criarPainelRevistar(jogador)
     btn.Size = UDim2.new(1, -16, 0, 50)
     btn.Position = UDim2.new(0, 8, 0, 30)
     btn.BackgroundColor3 = C.Card
-    btn.Text = "📋 "..comando.."\n(clique pra copiar e enviar)"
+    btn.Text = comando.."\n(clique pra copiar e enviar)"
     btn.TextColor3 = C.Texto
     btn.TextSize = 11
     btn.Font = Enum.Font.GothamBold
@@ -517,7 +515,7 @@ local function criarPainelRevistar(jogador)
             elseif toclipboard then toclipboard(comando) end
         end)
         enviarRevistar(usuario)
-        btn.Text = "✅ Copiado e enviado!"
+        btn.Text = "Copiado e enviado!"
         btn.BackgroundColor3 = C.Verde
         btn.TextColor3 = Color3.new(1,1,1)
         task.wait(1.2)
@@ -525,20 +523,10 @@ local function criarPainelRevistar(jogador)
             pcall(function() revistarGui:Destroy() end)
             revistarGui = nil
         end
-    e    btn.MouseButton1Click:Connect(function()
-        pcall(function()
-            if setclipboard then setclipboard(comando)
-            elseif toclipboard then toclipboard(comando) end
-        end)
-        enviarRevistar(usuario)
-        btn.Text = "✅ Copiado e enviado!"
-        btn.BackgroundColor3 = C.Verde
-        btn.TextColor3 = Color3.new(1,1,1)
-        task.wait(1.2)
-        if revistarGui then
-            pcall(function() revistarGui:Destroy() end)
-            revistarGui = nil
-        end
-    end) -- fecha a função do clique
-    revistarGui = frame -- ou algo assim, para guardar a referência
-end -- fecha a função criarPainelRevistar
+    end)
+    
+    task.spawn(function()
+        task.wait(15)
+        if revistarGui == frame then
+            pcall(function() frame:Destroy() end)
+   
